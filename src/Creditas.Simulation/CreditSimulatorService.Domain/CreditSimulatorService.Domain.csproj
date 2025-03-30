@@ -7,7 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\" />
+    <PackageReference Include="MongoDB.Bson" Version="3.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CreditSimulator.BuildingBlocks\CreditSimulator.BuildingBlocks.csproj" />
   </ItemGroup>
 
 </Project>

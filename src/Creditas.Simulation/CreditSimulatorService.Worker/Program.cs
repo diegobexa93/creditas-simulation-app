@@ -1,6 +1,9 @@
-﻿using CreditSimulatorService.Worker.Consumer;
+﻿using CreditSimulator.BuildingBlocks.Messaging;
+using CreditSimulatorService.Worker.Consumer;
 using MassTransit;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 
 var builder = Host.CreateApplicationBuilder(args);
 
@@ -10,10 +13,12 @@ builder.Services.AddMassTransit(x =>
 
     x.UsingRabbitMq((context, cfg) =>
     {
-        cfg.Host("rabbitmq", "/", h =>
+        var rabbitMQSettings = context.GetRequiredService<IOptions<RabbitMqConfiguration>>().Value;
+
+        cfg.Host(new Uri($"rabbitmq://{rabbitMQSettings.HostName}:{rabbitMQSettings.Port}"), h =>
         {
-            h.Username("guest");
-            h.Password("guest");
+            h.Username(rabbitMQSettings.UserName);
+            h.Password(rabbitMQSettings.Password);
         });
 
         cfg.ReceiveEndpoint("loan_simulations", e =>
