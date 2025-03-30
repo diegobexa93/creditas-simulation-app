@@ -29,22 +29,25 @@ services:
 
   creditsimulatorservice.api:
     container_name: CreditSimulator.API
-    image: ${DOCKER_REGISTRY-}creditsimulatorserviceapi
     build:
       context: .
       dockerfile: CreditSimulatorService.API/Dockerfile
+    ports:
+      - "6003:80"
+    environment:
+      - ASPNETCORE_URLS=http://+:80
+      - INSTANCE_NAME=CreditSimulatorService
     depends_on:
       rabbitmq:
         condition: service_healthy
 
   worker:
+    container_name: CreditSimulator.Worker
     build:
       context: .
-      dockerfile: CreditSimulator.Worker/Dockerfile
+      dockerfile: CreditSimulatorService.Worker/Dockerfile
     depends_on:
       - rabbitmq
-    deploy:
-      replicas: 3
 
   gateway:
     container_name: apigateway
