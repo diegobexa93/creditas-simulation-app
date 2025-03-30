@@ -15,6 +15,7 @@
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="11.11.0" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
+    <PackageReference Include="MassTransit" Version="8.4.0" />
     <PackageReference Include="MediatR" Version="12.4.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.3" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.3" />
@@ -22,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CreditSimulator.BuildingBlocks\CreditSimulator.BuildingBlocks.csproj" />
     <ProjectReference Include="..\CreditSimulatorService.Domain\CreditSimulatorService.Domain.csproj" />
   </ItemGroup>
 

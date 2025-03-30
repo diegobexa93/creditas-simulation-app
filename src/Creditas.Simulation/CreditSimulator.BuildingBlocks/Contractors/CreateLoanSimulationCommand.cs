@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace CreditSimulatorService.Application.Commands
+namespace CreditSimulator.BuildingBlocks.Contractors
 {
     public class CreateLoanSimulationCommand
     {

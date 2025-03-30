@@ -1,4 +1,4 @@
-﻿using CreditSimulatorService.Application.Commands;
+﻿using CreditSimulator.BuildingBlocks.Contractors;
 using FluentValidation;
 
 namespace CreditSimulatorService.Application.Validation

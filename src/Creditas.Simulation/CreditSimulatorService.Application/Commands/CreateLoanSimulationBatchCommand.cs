@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using CreditSimulator.BuildingBlocks.Contractors;
+using MediatR;
 
 namespace CreditSimulatorService.Application.Commands
 {

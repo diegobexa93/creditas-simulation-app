@@ -1,4 +1,8 @@
+using CreditSimulator.BuildingBlocks.Messaging;
 using CreditSimulatorService.Application;
+using CreditSimulatorService.Infrastructure;
+using MassTransit;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +15,7 @@ builder.Services.AddOpenApi();
 
 //Carregamento das configurações
 builder.Services.AddApplicationRegistration(builder.Configuration);
+builder.Services.AddInfrastructureRegistration(builder.Configuration);
 
 // Configurar Swagger
 builder.Services.AddEndpointsApiExplorer();
@@ -18,9 +23,23 @@ builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "Asterisk API",
+        Title = "Credit Simulator API",
         Version = "v1",
-        Description = "Asterisk API",
+        Description = "Credit Simulator API",
+    });
+});
+
+builder.Services.AddMassTransit(x =>
+{
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        var rabbitMQSettings = context.GetRequiredService<IOptions<RabbitMqConfiguration>>().Value;
+
+        cfg.Host(new Uri($"rabbitmq://{rabbitMQSettings.HostName}:{rabbitMQSettings.Port}"), h =>
+        {
+            h.Username(rabbitMQSettings.UserName);
+            h.Password(rabbitMQSettings.Password);
+        });
     });
 });
 
@@ -30,6 +49,12 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "Credit Simulator API v1");
+        options.RoutePrefix = ""; // Deixa a UI do Swagger na raiz (http://localhost:5000/)
+    });
 }
 
 app.UseHttpsRedirection();
