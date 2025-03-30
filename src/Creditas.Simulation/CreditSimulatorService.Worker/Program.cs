@@ -1,4 +1,6 @@
 ﻿using CreditSimulator.BuildingBlocks.Messaging;
+using CreditSimulatorService.Application;
+using CreditSimulatorService.Infrastructure;
 using CreditSimulatorService.Worker.Consumer;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
@@ -6,6 +8,10 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 
 var builder = Host.CreateApplicationBuilder(args);
+
+//Carregamento das configurações
+builder.Services.AddApplicationRegistration(builder.Configuration);
+builder.Services.AddInfrastructureRegistration(builder.Configuration);
 
 builder.Services.AddMassTransit(x =>
 {

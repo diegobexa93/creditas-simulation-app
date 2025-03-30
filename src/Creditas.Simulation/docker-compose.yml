@@ -1,0 +1,64 @@
+version: '3.9'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    volumes:
+      - mongodb_data:/data/db
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+
+  creditsimulatorservice.api:
+    container_name: CreditSimulator.API
+    image: ${DOCKER_REGISTRY-}creditsimulatorserviceapi
+    build:
+      context: .
+      dockerfile: CreditSimulatorService.API/Dockerfile
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  worker:
+    build:
+      context: .
+      dockerfile: CreditSimulator.Worker/Dockerfile
+    depends_on:
+      - rabbitmq
+    deploy:
+      replicas: 3
+
+  gateway:
+    container_name: apigateway
+    build:
+      context: .
+      dockerfile: ApiGatewayYarp/Dockerfile
+    ports:
+      - "8000:80"
+    environment:
+      - ASPNETCORE_URLS=http://+:80
+      - INSTANCE_NAME=ApiGateway
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+volumes:
+  mongodb_data:

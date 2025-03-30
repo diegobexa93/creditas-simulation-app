@@ -19,6 +19,7 @@
     <ProjectReference Include="..\CreditSimulator.BuildingBlocks\CreditSimulator.BuildingBlocks.csproj" />
     <ProjectReference Include="..\CreditSimulatorService.Application\CreditSimulatorService.Application.csproj" />
     <ProjectReference Include="..\CreditSimulatorService.Domain\CreditSimulatorService.Domain.csproj" />
+    <ProjectReference Include="..\CreditSimulatorService.Infrastructure\CreditSimulatorService.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
