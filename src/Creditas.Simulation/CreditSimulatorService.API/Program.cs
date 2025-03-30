@@ -16,6 +16,7 @@ builder.Services.AddOpenApi();
 //Carregamento das configurações
 builder.Services.AddApplicationRegistration(builder.Configuration);
 builder.Services.AddInfrastructureRegistration(builder.Configuration);
+builder.Services.Configure<RabbitMqConfiguration>(builder.Configuration.GetSection("RabbitMQ"));
 
 // Configurar Swagger
 builder.Services.AddEndpointsApiExplorer();
@@ -35,9 +36,9 @@ builder.Services.AddMassTransit(x =>
     {
         var rabbitMQSettings = context.GetRequiredService<IOptions<RabbitMqConfiguration>>().Value;
 
-        cfg.Host(new Uri($"rabbitmq://{rabbitMQSettings.HostName}:{rabbitMQSettings.Port}"), h =>
+        cfg.Host(new Uri($"rabbitmq://{rabbitMQSettings.Host}:{rabbitMQSettings.Port}"), h =>
         {
-            h.Username(rabbitMQSettings.UserName);
+            h.Username(rabbitMQSettings.Username);
             h.Password(rabbitMQSettings.Password);
         });
     });

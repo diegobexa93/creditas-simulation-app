@@ -1,10 +1,10 @@
-﻿using CreditSimulator.BuildingBlocks.Contractors;
-using MediatR;
+﻿using MediatR;
 
 namespace CreditSimulatorService.Application.Commands
 {
-    public record CreateLoanSimulationBatchCommand(List<CreateLoanSimulationCommand> Simulations) : IRequest<Guid>
+    public class CreateLoanSimulationBatchCommand() : IRequest<Guid>
     {
-        public Guid BatchId { get; init; } = Guid.NewGuid();
+        public required List<CreateLoanSimulationSendEmail> Simulations { get; set; }
+
     }
 }

@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace CreditSimulator.BuildingBlocks.Contractors
+namespace CreditSimulatorService.Application.Commands
 {
-    public class CreateLoanSimulationCommand
+    public class CreateLoanSimulationSendEmail
     {
         [JsonIgnore]
         public Guid BatchId { get; set; }

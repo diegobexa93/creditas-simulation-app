@@ -9,7 +9,6 @@ namespace CreditSimulatorService.Application
     {
         public static IServiceCollection AddApplicationRegistration(this IServiceCollection services, IConfiguration configuration)
         {
-
             //services.AddAutoMapper(typeof(UserProfile).Assembly);
             services.AddValidatorsFromAssemblyContaining<CreateLoanSimulationBatchCommandValidator>();
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));

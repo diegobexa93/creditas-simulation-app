@@ -9,43 +9,53 @@ namespace CreditSimulatorService.Application.Handlers.Command
     public class EnqueueLoanSimulationBatchHandler : IRequestHandler<CreateLoanSimulationBatchCommand, Guid>
     {
         private readonly ILogger<EnqueueLoanSimulationBatchHandler> _logger;
-
         private readonly ISendEndpointProvider _sendEndpointProvider;
         private readonly AsyncPolicy _publishPolicy;
 
-
         public EnqueueLoanSimulationBatchHandler(ISendEndpointProvider sendEndpointProvider,
-                                                  ILogger<EnqueueLoanSimulationBatchHandler> logger)
+                                                 ILogger<EnqueueLoanSimulationBatchHandler> logger)
         {
             _sendEndpointProvider = sendEndpointProvider;
             _logger = logger;
 
             _publishPolicy = Policy.Handle<Exception>()
                                    .WaitAndRetryAsync(
-                                       retryCount: 3, // Tentar no máximo 3 vezes
-                                       sleepDurationProvider: retryAttempt => TimeSpan.FromMilliseconds(300),
+                                       retryCount: 3,
+                                       sleepDurationProvider: retry => TimeSpan.FromMilliseconds(300),
                                        onRetry: (exception, timeSpan, retryCount, context) =>
                                        {
-                                           var batchId = context["BatchId"]?.ToString();
+                                           var email = context["Email"]?.ToString() ?? "unknown";
+                                           var batchId = context["BatchId"]?.ToString() ?? "unknown";
                                            _logger.LogWarning(exception,
-                                               "Retry {Retry} falhou ao publicar para {BatchId}, aguardando {Delay}...",
-                                               retryCount, batchId, timeSpan);
-                                       }
-                                   );
+                                               "[Retry {Retry}] Falha ao publicar simulação para {Email} no Batch {BatchId}. Retentando em {Delay}...",
+                                               retryCount, email, batchId, timeSpan);
+                                       });
         }
 
         public async Task<Guid> Handle(CreateLoanSimulationBatchCommand request, CancellationToken cancellationToken)
         {
             var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri("queue:loan_simulations"));
+            var batchId = Guid.NewGuid();
 
-            var tasks = request.Simulations.Select(x =>
+            var tasks = request.Simulations.Select(simulation =>
             {
-                x.BatchId = request.BatchId;
+                var simulationMessage = new CreateLoanSimulationSendEmail
+                {
+                    BatchId = batchId,
+                    ValueLoan = simulation.ValueLoan,
+                    PaymentTerm = simulation.PaymentTerm,
+                    BirthDate = simulation.BirthDate,
+                    Email = simulation.Email
+                };
 
-                var context = new Context { ["BatchId"] = x.BatchId };
+                var context = new Context
+                {
+                    ["Email"] = simulation.Email,
+                    ["BatchId"] = batchId.ToString()
+                };
 
                 return _publishPolicy.ExecuteAsync(
-                    async (ctx, ct) => await endpoint.Send(x, ct),
+                    async (ctx, ct) => await endpoint.Send(simulationMessage, ct),
                     context,
                     cancellationToken
                 );
@@ -53,7 +63,10 @@ namespace CreditSimulatorService.Application.Handlers.Command
 
             await Task.WhenAll(tasks);
 
-            return request.BatchId;
+            _logger.LogInformation("Batch {BatchId} publicado com {Count} simulações.", batchId, request.Simulations.Count);
+
+            return batchId;
         }
     }
+
 }
