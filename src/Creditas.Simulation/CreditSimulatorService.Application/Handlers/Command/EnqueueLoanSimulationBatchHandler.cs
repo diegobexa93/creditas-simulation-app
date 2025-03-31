@@ -1,4 +1,5 @@
-﻿using CreditSimulatorService.Application.Commands;
+﻿using CreditSimulator.BuildingBlocks.Messaging.Events;
+using CreditSimulatorService.Application.Commands;
 using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -39,7 +40,7 @@ namespace CreditSimulatorService.Application.Handlers.Command
 
             var tasks = request.Simulations.Select(simulation =>
             {
-                var simulationMessage = new CreateLoanSimulationSendEmail
+                var simulationMessage = new LoanSimulationGenerateEvent
                 {
                     BatchId = batchId,
                     ValueLoan = simulation.ValueLoan,

@@ -1,5 +1,4 @@
 ﻿using CreditSimulator.BuildingBlocks.Messaging;
-using CreditSimulatorService.Application;
 using CreditSimulatorService.Infrastructure;
 using CreditSimulatorService.Worker.Consumer;
 using MassTransit;

@@ -1,9 +1,9 @@
-﻿using CreditSimulatorService.Application.Commands;
+﻿using CreditSimulatorService.Application.DTOs;
 using FluentValidation;
 
 namespace CreditSimulatorService.Application.Validation
 {
-    public class CreateLoanSimulationBatchCommandValidator : AbstractValidator<CreateLoanSimulationSendEmail>
+    public class CreateLoanSimulationBatchCommandValidator : AbstractValidator<LoanSimulationSendEmailRequestDto>
     {
         public CreateLoanSimulationBatchCommandValidator()
         {

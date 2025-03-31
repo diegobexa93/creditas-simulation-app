@@ -1,12 +1,11 @@
 ﻿using CreditSimulator.BuildingBlocks.Messaging.Events;
-using CreditSimulatorService.Application.Commands;
 using CreditSimulatorService.Domain.Entities;
 using MassTransit;
 using Microsoft.Extensions.Logging;
 
 namespace CreditSimulatorService.Worker.Consumer
 {
-    public class CreateLoanSimulationConsumer : IConsumer<CreateLoanSimulationSendEmail>
+    public class CreateLoanSimulationConsumer : IConsumer<LoanSimulationGenerateEvent>
     {
         private readonly ILogger<CreateLoanSimulationConsumer> _logger;
 
@@ -15,7 +14,7 @@ namespace CreditSimulatorService.Worker.Consumer
             _logger = logger;
         }
 
-        public async Task Consume(ConsumeContext<CreateLoanSimulationSendEmail> context)
+        public async Task Consume(ConsumeContext<LoanSimulationGenerateEvent> context)
         {
             var message = context.Message;
 

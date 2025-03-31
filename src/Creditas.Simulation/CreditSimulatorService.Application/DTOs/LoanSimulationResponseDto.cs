@@ -1,6 +1,6 @@
 ﻿namespace CreditSimulatorService.Application.DTOs
 {
-    public class LoanSimulationDto
+    public class LoanSimulationResponseDto
     {
         public string Email { get; set; } = default!;
         public decimal ValueLoan { get; set; }

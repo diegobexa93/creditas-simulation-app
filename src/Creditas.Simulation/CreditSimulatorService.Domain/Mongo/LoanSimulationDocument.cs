@@ -16,6 +16,8 @@ namespace CreditSimulatorService.Domain.Mongo
         public decimal MonthlyInstallment { get; private set; }
         public decimal TotalToPay { get; private set; }
         public decimal InterestPaid { get; private set; }
+
+        [BsonRepresentation(BsonType.String)]
         public Guid BatchId { get; private set; }
         public DateTime SimulatedAt { get; private set; }
 
