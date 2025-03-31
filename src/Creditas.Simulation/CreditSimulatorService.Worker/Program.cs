@@ -10,13 +10,14 @@ using Microsoft.Extensions.Options;
 var builder = Host.CreateApplicationBuilder(args);
 
 //Carregamento das configurações
-builder.Services.AddApplicationRegistration(builder.Configuration);
 builder.Services.AddInfrastructureRegistration(builder.Configuration);
 builder.Services.Configure<RabbitMqConfiguration>(builder.Configuration.GetSection("RabbitMQ"));
 
 builder.Services.AddMassTransit(x =>
 {
     x.AddConsumer<CreateLoanSimulationConsumer>();
+    x.AddConsumer<LoanSimulationEmailConsumer>();
+    x.AddConsumer<LoanSimulationPersistenceConsumer>();
 
     x.UsingRabbitMq((context, cfg) =>
     {
