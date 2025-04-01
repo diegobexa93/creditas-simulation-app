@@ -8,6 +8,13 @@
 
         public LoanSimulation(decimal valueLoan, int paymentTerm, DateTime birthDate)
         {
+            if (valueLoan <= 0)
+                throw new ArgumentException("Valor do empréstimo deve ser maior que zero.");
+            if (paymentTerm <= 0)
+                throw new ArgumentException("Prazo de pagamento deve ser maior que zero.");
+            if (birthDate > DateTime.Today)
+                throw new ArgumentException("Data de nascimento inválida.");
+
             ValueLoan = valueLoan;
             PaymentTerm = paymentTerm;
             BirthDate = birthDate;
