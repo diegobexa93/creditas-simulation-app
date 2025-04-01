@@ -1,0 +1,6 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/src/CreditSimulator.IntegrationTests/obj
+/src/CreditSimulator.UnitTests/obj
