@@ -1,12 +1,14 @@
-#Loan Simulation API → RabbitMQ → Consumers → MongoDB
+#Loan Simulation API
 
-Este teste de ponta a ponta (E2E) cobre o fluxo completo da aplicação, desde o recebimento de uma requisição HTTP na API até a persistência do resultado da simulação no MongoDB, passando por RabbitMQ e os consumers reais.
+Loan Simulation é uma solução robusta e escalável para simular empréstimo de crédito.
 
 ---
 
 ## ✅ Fluxo Validado no Teste `LoanSimulationApiE2ETests`
 
 ```
+POST /ApiGateway
+        ↓
 POST /CreateBatch (API Controller)
         ↓
 Publica LoanSimulationGenerateEvent no RabbitMQ
@@ -107,10 +109,10 @@ O teste irá:
 
 ## 📬 Exemplos de Requisições para os Endpoints
 
-### POST `/api/LoanSimulation/CreateBatch`
+### POST `/creditsimulatorservice/api/LoanSimulation/CreateBatch`
 
-```http
-POST /api/LoanSimulation/CreateBatch
+```http Porta 8000
+POST /creditsimulatorservice/api/LoanSimulation/CreateBatch
 Content-Type: application/json
 
 {
@@ -136,6 +138,58 @@ Content-Type: application/json
 "8c9c2764-8d1b-4d1f-902a-05fa948b3c44"
 ```
 (*ID do batch que foi publicado*)
+
+### GET /creditsimulatorservice/api/LoanSimulation/GetBatchById/{id}?pageNumber=1&pageSize=10`
+
+```http Porta 8000
+GET /creditsimulatorservice/api/LoanSimulation/GetBatchById/{id}?pageNumber=1&pageSize=10
+Content-Type: application/json
+
+{id} - Id do batch
+pageNumber - Número da Página
+pageSize - Tamanho da Página
+
+{
+    "items": [
+        {
+            "email": "l17ck7dc@email.com",
+            "valueLoan": 7340,
+            "paymentTerm": 36,
+            "birthDate": "2005-01-22T00:00:00Z",
+            "monthlyInstallment": 219.99,
+            "totalToPay": 7919.51,
+            "interestPaid": 579.51,
+            "simulatedAt": "2025-03-31T15:21:10.958Z"
+        }
+	]
+}
+```
+
+### GET /creditsimulatorservice/api/LoanSimulation/GetBatchByEmail/{email}?pageNumber=1&pageSize=10`
+
+```http Porta 8000
+GET /creditsimulatorservice/api/LoanSimulation/GetBatchByEmail/{email}?pageNumber=1&pageSize=10
+Content-Type: application/json
+
+{email} - Email do cliente
+pageNumber - Número da Página
+pageSize - Tamanho da Página
+
+{
+    "items": [
+        {
+            "email": "l17ck7dc@email.com",
+            "valueLoan": 7340,
+            "paymentTerm": 36,
+            "birthDate": "2005-01-22T00:00:00Z",
+            "monthlyInstallment": 219.99,
+            "totalToPay": 7919.51,
+            "interestPaid": 579.51,
+            "simulatedAt": "2025-03-31T15:21:10.958Z"
+        }
+	]
+}
+```
 
 ---
 
@@ -164,9 +218,13 @@ Content-Type: application/json
 - ✅ Rodar o mesmo fluxo com Docker Compose para CI/CD
 - 🔄 Testar múltiplas simulações por batch
 - ⚠️ Simular falhas no Mongo ou no RabbitMQ para testar resiliência
+- ⚠️ Simular falhas nos testes unitários e integração
 - 📈 Medir tempo de resposta entre publicação e persistência
 
 ---
 
-> Este teste garante que a integração completa entre módulos assíncronos esteja funcionando corretamente e que o sistema como um todo está reagindo conforme esperado.
+## 🔗 Recursos úteis para testes
+
+- [Infraestrutura (pasta infra)](https://github.com/diegobexa93/creditas-simulation-app/tree/main/infra)
+
 
