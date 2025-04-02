@@ -1,4 +1,4 @@
-#Loan Simulation API
+##Loan Simulation API
 
 Loan Simulation é uma solução robusta e escalável para simular empréstimo de crédito.
 
@@ -148,10 +148,7 @@ Retorna uma lista paginada de simulações pertencentes a um batch específico.
 
 #### 📥 Método e URL
 
-```http
-GET http://localhost:8000/creditsimulatorservice/api/LoanSimulation/GetBatchById/{id}?pageNumber=1&pageSize=10
-
-#### 📥 Parâmetros
+##### 📥 Parâmetros
 
 **Rota**
 - `id` (GUID, obrigatório): Identificador único do batch de simulações.
@@ -160,10 +157,14 @@ GET http://localhost:8000/creditsimulatorservice/api/LoanSimulation/GetBatchById
 - `pageNumber` (int, opcional): Página da consulta (ex: 1).
 - `pageSize` (int, opcional): Tamanho da página (ex: 10).
 
-#### 📤 Cabeçalhos
+##### 📤 Cabeçalhos
 - `Content-Type`: `application/json`
 
-✅ Resposta esperada — 200 OK
+```http
+GET http://localhost:8000/creditsimulatorservice/api/LoanSimulation/GetBatchById/{id}?pageNumber=1&pageSize=10
+
+
+Resposta esperada:
 
 {
   "items": [
@@ -192,10 +193,7 @@ Retorna uma lista paginada de simulações pertencentes a um batch específico.
 
 #### 📥 Método e URL
 
-```http
-GET http://localhost:8000/creditsimulatorservice/api/LoanSimulation/GetBatchByEmail/{email}?pageNumber=1&pageSize=10
-
-#### 📥 Parâmetros
+##### 📥 Parâmetros
 
 **Rota**
 - `email` (GUID, obrigatório): Email do cliente.
@@ -204,10 +202,13 @@ GET http://localhost:8000/creditsimulatorservice/api/LoanSimulation/GetBatchByEm
 - `pageNumber` (int, opcional): Página da consulta (ex: 1).
 - `pageSize` (int, opcional): Tamanho da página (ex: 10).
 
-#### 📤 Cabeçalhos
+##### 📤 Cabeçalhos
 - `Content-Type`: `application/json`
 
-✅ Resposta esperada — 200 OK
+```http
+GET http://localhost:8000/creditsimulatorservice/api/LoanSimulation/GetBatchByEmail/{email}?pageNumber=1&pageSize=10
+
+Resposta esperada:
 
 {
   "items": [
@@ -248,7 +249,7 @@ GET http://localhost:8000/creditsimulatorservice/api/LoanSimulation/GetBatchByEm
 ## 🚀 Sugestões para Evoluir
 
 - ✅ Validar e implementar o envio do evento de e-mail (`LoanSimulationEmailEvent`)
-- ✅ Rodar o mesmo fluxo com Docker Compose para CI/CD e acrescentar para executar os testes de unidade e integração
+- ✅ Rodar o mesmo fluxo com Docker Compose, acrescentar para executar os testes de unidade, integração e E2E na CI/CD
 - 🔄 Testar múltiplas simulações por batch
 - ⚠️ Simular falhas no Mongo ou no RabbitMQ para testar resiliência
 - ⚠️ Simular falhas nos testes unitários e integração
