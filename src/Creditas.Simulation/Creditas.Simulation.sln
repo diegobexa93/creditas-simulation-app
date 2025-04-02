@@ -37,6 +37,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreditSimulator.Integration
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreditSimulator.UnitTests", "CreditSimulator.UnitTests\CreditSimulator.UnitTests.csproj", "{39121203-46CA-48F0-B8DE-DE28797D0CE9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreditSimulator.Benchmarks", "CreditSimulator.Benchmarks\CreditSimulator.Benchmarks.csproj", "{D8FA60DC-F5BE-4A95-8CC4-854FBA1F68D3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,10 @@ Global
 		{39121203-46CA-48F0-B8DE-DE28797D0CE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39121203-46CA-48F0-B8DE-DE28797D0CE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39121203-46CA-48F0-B8DE-DE28797D0CE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8FA60DC-F5BE-4A95-8CC4-854FBA1F68D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8FA60DC-F5BE-4A95-8CC4-854FBA1F68D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8FA60DC-F5BE-4A95-8CC4-854FBA1F68D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8FA60DC-F5BE-4A95-8CC4-854FBA1F68D3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -104,5 +110,6 @@ Global
 		{A8AEA108-6BB8-4E51-B4E5-86FD249174B6} = {ECBAECDB-C5B9-4B5B-849A-1A1F36708588}
 		{AB1239F1-A6CE-4542-A377-E6EF8FD15B62} = {ECBAECDB-C5B9-4B5B-849A-1A1F36708588}
 		{39121203-46CA-48F0-B8DE-DE28797D0CE9} = {ECBAECDB-C5B9-4B5B-849A-1A1F36708588}
+		{D8FA60DC-F5BE-4A95-8CC4-854FBA1F68D3} = {ECBAECDB-C5B9-4B5B-849A-1A1F36708588}
 	EndGlobalSection
 EndGlobal

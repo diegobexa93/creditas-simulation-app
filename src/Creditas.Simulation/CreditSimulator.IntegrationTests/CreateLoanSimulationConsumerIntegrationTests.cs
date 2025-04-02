@@ -17,6 +17,8 @@ namespace CreditSimulator.IntegrationTests
         #region [ Initialize And Dispose]
         public async Task InitializeAsync()
         {
+            #region [ RabbitMQ Config ]
+
             _rabbit = new RabbitMqBuilder()
                 .WithUsername("guest")
                 .WithPassword("guest")
@@ -37,6 +39,12 @@ namespace CreditSimulator.IntegrationTests
                 {
                     var logger = LoggerFactory.Create(builder => builder.AddConsole()).CreateLogger<CreateLoanSimulationConsumer>();
                     e.Consumer(() => new CreateLoanSimulationConsumer(logger));
+
+                    e.Handler<LoanSimulationGenerateEvent>(ctx =>
+                    {
+                        _receivedMessages.Add(ctx.Message);
+                        return Task.CompletedTask;
+                    });
                 });
 
                 // Captura os eventos publicados para validação no teste
@@ -60,6 +68,8 @@ namespace CreditSimulator.IntegrationTests
             });
 
             await _bus.StartAsync();
+
+            #endregion
         }
 
         public async Task DisposeAsync()

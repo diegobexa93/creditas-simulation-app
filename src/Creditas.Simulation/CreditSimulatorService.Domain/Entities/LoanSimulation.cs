@@ -1,56 +1,43 @@
 ﻿namespace CreditSimulatorService.Domain.Entities
 {
-    public class LoanSimulation
+    public sealed class LoanSimulation
     {
-        public decimal ValueLoan { get; private set; }
-        public int PaymentTerm { get; private set; }
-        public DateTime BirthDate { get; private set; }
+        public decimal ValueLoan { get; }
+        public int PaymentTerm { get; }
+        public DateTime BirthDate { get; }
 
         public LoanSimulation(decimal valueLoan, int paymentTerm, DateTime birthDate)
         {
             if (valueLoan <= 0)
-                throw new ArgumentException("Valor do empréstimo deve ser maior que zero.");
+                ThrowArgument(nameof(valueLoan), "Valor do empréstimo deve ser maior que zero.");
             if (paymentTerm <= 0)
-                throw new ArgumentException("Prazo de pagamento deve ser maior que zero.");
+                ThrowArgument(nameof(paymentTerm), "Prazo de pagamento deve ser maior que zero.");
             if (birthDate > DateTime.Today)
-                throw new ArgumentException("Data de nascimento inválida.");
+                ThrowArgument(nameof(birthDate), "Data de nascimento inválida.");
 
             ValueLoan = valueLoan;
             PaymentTerm = paymentTerm;
             BirthDate = birthDate;
         }
 
+        private static void ThrowArgument(string name, string message) =>
+            throw new ArgumentException(message, name);
 
-        /// <summary>
-        /// Realiza a simulação do empréstimo com base no valor solicitado, prazo e idade do cliente.
-        /// </summary>
-        /// <returns>
-        /// Um <see cref="LoanResult"/> contendo:
-        /// - O valor da parcela mensal.
-        /// - O valor total a ser pago ao final do período.
-        /// - O total de juros pagos.
-        /// - A taxa de juros anual aplicada com base na idade.
-        /// </returns>
-        /// <remarks>
-        /// A taxa de juros anual varia conforme a idade do cliente:
-        /// - Até 25 anos: 5%
-        /// - De 26 a 40 anos: 3%
-        /// - De 41 a 60 anos: 2%
-        /// - Acima de 60 anos: 4%
-        /// </remarks>
         public LoanResult Simulate()
         {
-            var age = CalculateAge(BirthDate);
-            var annualRate = GetAnnualInterestRate(age);
-            var monthlyRate = (double)(annualRate / 100 / 12);
-            var n = PaymentTerm;
-            var pv = (double)ValueLoan;
+            int age = CalculateAge(BirthDate);
+            decimal annualRate = GetAnnualInterestRate(age);
+            double monthlyRate = (double)(annualRate / 100m / 12m);
 
-            var factor = Math.Pow(1 + monthlyRate, -n);
-            var pmt = pv * monthlyRate / (1 - factor);
+            int n = PaymentTerm;
+            double pv = (double)ValueLoan;
 
-            var totalPaid = pmt * n;
-            var interestPaid = totalPaid - pv;
+            // pmt = pv * i / (1 - (1 + i)^-n)
+            double factor = Math.Pow(1 + monthlyRate, -n);
+            double pmt = pv * monthlyRate / (1 - factor);
+
+            double totalPaid = pmt * n;
+            double interestPaid = totalPaid - pv;
 
             return new LoanResult(
                 MonthlyInstallment: Math.Round((decimal)pmt, 2),
@@ -60,37 +47,22 @@
             );
         }
 
-
-        /// <summary>
-        /// Retorna a taxa de juros anual com base na idade do cliente.
-        /// </summary>
-        /// <param name="age">Idade do cliente em anos.</param>
-        /// <returns>Taxa de juros anual correspondente à faixa etária.</returns>
-        /// <remarks>
-        /// Regras de cálculo:
-        /// - Até 25 anos: 5% ao ano
-        /// - De 26 a 40 anos: 3% ao ano
-        /// - De 41 a 60 anos: 2% ao ano
-        /// - Acima de 60 anos: 4% ao ano
-        /// </remarks>
-        private static decimal GetAnnualInterestRate(int age)
-        {
-            return age switch
-            {
-                <= 25 => 5.0m,
-                <= 40 => 3.0m,
-                <= 60 => 2.0m,
-                _ => 4.0m
-            };
-        }
-
         private static int CalculateAge(DateTime birthDate)
         {
-            var today = DateTime.Today;
-            var age = today.Year - birthDate.Year;
-            if (birthDate.Date > today.AddYears(-age)) age--;
+            var today = DateOnly.FromDateTime(DateTime.Today);
+            var birth = DateOnly.FromDateTime(birthDate);
+            int age = today.Year - birth.Year;
+            if (birth > today.AddYears(-age)) age--;
             return age;
         }
+
+        private static decimal GetAnnualInterestRate(int age) => age switch
+        {
+            <= 25 => 5.0m,
+            <= 40 => 3.0m,
+            <= 60 => 2.0m,
+            _ => 4.0m
+        };
     }
 
 }
