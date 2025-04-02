@@ -1,5 +1,3 @@
-##Loan Simulation API
-
 Loan Simulation é uma solução robusta e escalável para simular empréstimo de crédito.
 
 ---
@@ -164,8 +162,6 @@ Retorna uma lista paginada de simulações pertencentes a um batch específico.
 GET http://localhost:8000/creditsimulatorservice/api/LoanSimulation/GetBatchById/{id}?pageNumber=1&pageSize=10
 
 
-Resposta esperada:
-
 {
   "items": [
     {
@@ -207,8 +203,6 @@ Retorna uma lista paginada de simulações pertencentes a um batch específico.
 
 ```http
 GET http://localhost:8000/creditsimulatorservice/api/LoanSimulation/GetBatchByEmail/{email}?pageNumber=1&pageSize=10
-
-Resposta esperada:
 
 {
   "items": [
