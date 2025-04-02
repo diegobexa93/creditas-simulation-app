@@ -64,7 +64,7 @@ A aplicação segue uma arquitetura **desacoplada, assíncrona e orientada a eve
 
 - Separação de responsabilidades entre API (entrada) e Worker (processamento assíncrono)
 - Uso de eventos para garantir desacoplamento e escalabilidade
-- Aplicação do padrão CQRS e princípios SOLID nos serviços
+- Aplicação do padrão CQRS e princípios SOLID e DDD nos serviços
 - Comunicação assíncrona baseada em mensageria com `MassTransit` + `RabbitMQ`
 - Persistência orientada a documentos com `MongoDB.Driver`
 - Camada de testes estruturada por tipo (unitários, integração e E2E), com uso intensivo de `Testcontainers`
@@ -83,11 +83,8 @@ A aplicação segue uma arquitetura **desacoplada, assíncrona e orientada a eve
 ```bash
 cd src/Creditas.Simulation
 
-# Restaurar pacotes
-dotnet restore
-
-# Compilar solução
-dotnet build
+# Executar o docker-compose.yml
+docker-compose up --build -d
 ```
 
 ### Rodar os testes End-to-End
@@ -139,60 +136,96 @@ Content-Type: application/json
 ```
 (*ID do batch que foi publicado*)
 
-### GET /creditsimulatorservice/api/LoanSimulation/GetBatchById/{id}?pageNumber=1&pageSize=10`
+## 📘 Endpoints de Consulta
 
-```http Porta 8000
-GET /creditsimulatorservice/api/LoanSimulation/GetBatchById/{id}?pageNumber=1&pageSize=10
-Content-Type: application/json
+---
 
-{id} - Id do batch
-pageNumber - Número da Página
-pageSize - Tamanho da Página
+### 🔍 GET `/creditsimulatorservice/api/LoanSimulation/GetBatchById/{id}`
 
-{
-    "items": [
-        {
-            "email": "l17ck7dc@email.com",
-            "valueLoan": 7340,
-            "paymentTerm": 36,
-            "birthDate": "2005-01-22T00:00:00Z",
-            "monthlyInstallment": 219.99,
-            "totalToPay": 7919.51,
-            "interestPaid": 579.51,
-            "simulatedAt": "2025-03-31T15:21:10.958Z"
-        }
-	]
-}
-```
+Retorna uma lista paginada de simulações pertencentes a um batch específico.
 
-### GET /creditsimulatorservice/api/LoanSimulation/GetBatchByEmail/{email}?pageNumber=1&pageSize=10`
+---
 
-```http Porta 8000
-GET /creditsimulatorservice/api/LoanSimulation/GetBatchByEmail/{email}?pageNumber=1&pageSize=10
-Content-Type: application/json
+#### 📥 Método e URL
 
-{email} - Email do cliente
-pageNumber - Número da Página
-pageSize - Tamanho da Página
+```http
+GET http://localhost:8000/creditsimulatorservice/api/LoanSimulation/GetBatchById/{id}?pageNumber=1&pageSize=10
+
+#### 📥 Parâmetros
+
+**Rota**
+- `id` (GUID, obrigatório): Identificador único do batch de simulações.
+
+**Query**
+- `pageNumber` (int, opcional): Página da consulta (ex: 1).
+- `pageSize` (int, opcional): Tamanho da página (ex: 10).
+
+#### 📤 Cabeçalhos
+- `Content-Type`: `application/json`
+
+✅ Resposta esperada — 200 OK
 
 {
-    "items": [
-        {
-            "email": "l17ck7dc@email.com",
-            "valueLoan": 7340,
-            "paymentTerm": 36,
-            "birthDate": "2005-01-22T00:00:00Z",
-            "monthlyInstallment": 219.99,
-            "totalToPay": 7919.51,
-            "interestPaid": 579.51,
-            "simulatedAt": "2025-03-31T15:21:10.958Z"
-        }
-	]
+  "items": [
+    {
+      "email": "l17ck7dc@email.com",
+      "valueLoan": 7340,
+      "paymentTerm": 36,
+      "birthDate": "2005-01-22T00:00:00Z",
+      "monthlyInstallment": 219.99,
+      "totalToPay": 7919.51,
+      "interestPaid": 579.51,
+      "simulatedAt": "2025-03-31T15:21:10.958Z"
+    }
+  ]
 }
+
 ```
 
 ---
 
+### 🔍 GET `/creditsimulatorservice/api/LoanSimulation/GetBatchByEmail/{email}`
+
+Retorna uma lista paginada de simulações pertencentes a um batch específico.
+
+---
+
+#### 📥 Método e URL
+
+```http
+GET http://localhost:8000/creditsimulatorservice/api/LoanSimulation/GetBatchByEmail/{email}?pageNumber=1&pageSize=10
+
+#### 📥 Parâmetros
+
+**Rota**
+- `email` (GUID, obrigatório): Email do cliente.
+
+**Query**
+- `pageNumber` (int, opcional): Página da consulta (ex: 1).
+- `pageSize` (int, opcional): Tamanho da página (ex: 10).
+
+#### 📤 Cabeçalhos
+- `Content-Type`: `application/json`
+
+✅ Resposta esperada — 200 OK
+
+{
+  "items": [
+    {
+      "email": "l17ck7dc@email.com",
+      "valueLoan": 7340,
+      "paymentTerm": 36,
+      "birthDate": "2005-01-22T00:00:00Z",
+      "monthlyInstallment": 219.99,
+      "totalToPay": 7919.51,
+      "interestPaid": 579.51,
+      "simulatedAt": "2025-03-31T15:21:10.958Z"
+    }
+  ]
+}
+
+```
+---
 
 ## 💡 Como o teste está estruturado
 
@@ -215,7 +248,7 @@ pageSize - Tamanho da Página
 ## 🚀 Sugestões para Evoluir
 
 - ✅ Validar e implementar o envio do evento de e-mail (`LoanSimulationEmailEvent`)
-- ✅ Rodar o mesmo fluxo com Docker Compose para CI/CD
+- ✅ Rodar o mesmo fluxo com Docker Compose para CI/CD e acrescentar para executar os testes de unidade e integração
 - 🔄 Testar múltiplas simulações por batch
 - ⚠️ Simular falhas no Mongo ou no RabbitMQ para testar resiliência
 - ⚠️ Simular falhas nos testes unitários e integração
