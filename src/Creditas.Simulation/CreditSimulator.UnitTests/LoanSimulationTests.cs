@@ -11,9 +11,9 @@ namespace CreditSimulator.UnitTests
 
             var result = simulation.Simulate();
 
-            Assert.True(result.MonthlyInstallment > 0);
-            Assert.True(result.TotalToPay > 10000);
-            Assert.Equal(result.TotalToPay - 10000, result.InterestPaid);
+            Assert.True(result.MonthlyInstallment.Equals(846.94m));
+            Assert.True(result.TotalToPay.Equals(10163.24m));
+            Assert.Equal(result.TotalToPay - 10000m, result.InterestPaid);
         }
     }
 }

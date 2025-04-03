@@ -243,12 +243,16 @@ GET http://localhost:8000/creditsimulatorservice/api/LoanSimulation/GetBatchByEm
 ## 🚀 Sugestões para Evoluir
 
 - ✅ Validar e implementar o envio do evento de e-mail (`LoanSimulationEmailEvent`)
+- ✅ Implementar no módulo de notificação envio para SMS/WhatsApp
 - ✅ Rodar o mesmo fluxo com Docker Compose, acrescentar para executar os testes de unidade, integração e E2E na CI/CD
 - 🔄 Testar múltiplas simulações por batch
 - ⚠️ Simular falhas no Mongo ou no RabbitMQ para testar resiliência
 - ⚠️ Simular falhas nos testes unitários e integração
+- ⚠️ Implementação Key Vault para chaves sensíveis
 - 📈 Medir tempo de resposta entre publicação e persistência
-
+- 📈 Módulo de proposta
+- 📈 Adicionar suporte para diferentes cenários de taxa de juros (fixa e variável)
+- 📈 Adicionar suporte para diferentes moedas e conversão de taxas
 ---
 
 ## 🔗 Recursos úteis para testes
